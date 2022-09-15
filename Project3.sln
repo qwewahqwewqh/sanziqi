@@ -1,31 +1,206 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.3.32825.248
-MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Project3", "Project3\Project3.vcxproj", "{E1F785EF-535D-4DD0-A03A-FACB1F89F2EE}"
-EndProject
-Global
-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|x64 = Debug|x64
-		Debug|x86 = Debug|x86
-		Release|x64 = Release|x64
-		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E1F785EF-535D-4DD0-A03A-FACB1F89F2EE}.Debug|x64.ActiveCfg = Debug|x64
-		{E1F785EF-535D-4DD0-A03A-FACB1F89F2EE}.Debug|x64.Build.0 = Debug|x64
-		{E1F785EF-535D-4DD0-A03A-FACB1F89F2EE}.Debug|x86.ActiveCfg = Debug|Win32
-		{E1F785EF-535D-4DD0-A03A-FACB1F89F2EE}.Debug|x86.Build.0 = Debug|Win32
-		{E1F785EF-535D-4DD0-A03A-FACB1F89F2EE}.Release|x64.ActiveCfg = Release|x64
-		{E1F785EF-535D-4DD0-A03A-FACB1F89F2EE}.Release|x64.Build.0 = Release|x64
-		{E1F785EF-535D-4DD0-A03A-FACB1F89F2EE}.Release|x86.ActiveCfg = Release|Win32
-		{E1F785EF-535D-4DD0-A03A-FACB1F89F2EE}.Release|x86.Build.0 = Release|Win32
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {E9F548BC-B678-4636-B65E-8D0EDC5915CB}
-	EndGlobalSection
-EndGlobal
+#define _CRT_SECURE_NO_WARNINGS 1
+
+
+//三子棋游戏
+#define ROW 3
+#define COL 3
+
+#include<stdio.h>
+#include<stdlib.h>//srand函数
+#include<time.h>
+//
+int IsFull(char board[ROW][COL], int row, int col)
+{
+	int i = 0;
+	for (i = 0; i < row; i++)
+	{
+		int j = 0;
+		for (j = 0; j < col; j++)
+		{
+			if (board[i][j] == ' ')
+				return 0;
+		}
+	}
+	return 1;
+}
+char IsWin(char board[ROW][COL], int row, int col)
+{
+	int i = 0;
+	
+	if (board[i][0] == board[i][1] && board[i][1] == board[i][2] && board[i][1] != ' ')
+		return board[i][1];
+	if (board[0][i] == board[1][i] && board[1][i] == board[2][i] && board[1][i] != ' ')
+		return board[1][i];
+	if (board[0][0] == board[1][1] && board[1][1] == board[2][2] && board[1][1] != ' ')
+		return board[1][1];
+	if (board[0][2] == board[1][1] && board[1][1] == board[2][0] && board[1][1] != ' ')
+		return board[1][1];
+	if (IsFull(board, ROW, COL))
+	{
+		return 'Q';
+	}
+	return 'C';
+}
+void Computerplayerchar(char board[ROW][COL],int row,int col)//电脑
+{
+	int x = 0;
+	int y = 0;
+	printf("电脑下棋\n");
+	while (1)
+	{
+		x = rand() % row;
+		y = rand() % col;
+		if (board[x][y] == ' ')
+		{
+			board[x][y] = '#';
+			break;
+		}
+		else
+		{
+			continue;
+		}
+	}
+	
+}
+
+void Player(char board[ROW][COL],int row,int col)//玩家
+{
+	int x = 0;
+	int y = 0;
+	printf("玩家走：》\n");
+	while (1)
+	{
+		printf("请输入坐标:>\n");
+		scanf("%d%d", & x,& y);
+		if (x >= 1 && x <= row && y >= 1 && y <= col)
+		{
+			if (board[x - 1][y - 1] = ' ')
+			{
+				board[x - 1][y - 1] = '*';
+				break;
+			}
+			else
+			{
+				printf("该坐标被占用\n");
+			}
+		}
+		else
+		{
+			printf("输入错误,请重新输入：\n");
+		}
+	}
+}
+//初始化棋盘
+void InitBoard(char board[ROW][COL], int row, int col)
+{
+	int i = 0;
+	int j = 0;
+	for (i = 0; i < row; i++)
+	{
+		for (j = 0; j < col; j++)
+		{
+			board[i][j] = ' ';
+		}
+	}
+}
+//打印棋盘
+void DisplayBoard(char board[ROW][COL], int row, int col)
+{
+	int i = 0;
+	for (i = 0; i < row; i++)
+	{
+		//打印一行的数据
+		int j = 0;
+		for (j = 0; j < col; j++)
+		{
+			printf(" %c ", board[i][j]);
+			if (j < col - 1)
+				printf("|");
+		}
+		printf("\n");
+		//打印分割行
+		if (i < row - 1)
+		{
+			for (j = 0; j < col; j++)
+			{
+				printf("---");
+				if (j < col - 1)
+					printf("|");
+			}
+		}
+		printf("\n");
+	}
+}
+void menu()
+{
+	printf("************************************\n");
+	printf("**********1.play   0.exit **********\n");
+	printf("************************************\n");
+}
+//游戏实现
+void game()
+{
+	//数组-存放走出的信息
+	char board[ROW][COL] = { 0 };//全部空格
+	//初始化棋盘
+	InitBoard(board, ROW, COL);
+	//打印棋盘
+	DisplayBoard(board, ROW, COL);
+	int ret = 0;
+	while (1)
+	{
+		//玩家走
+		Player(board, ROW, COL);
+		DisplayBoard(board, ROW, COL);
+		ret=IsWin(board, ROW, COL);
+		if (ret != 'C')
+		{
+			break;
+		}
+		//电脑走
+		Computerplayerchar(board, ROW, COL);
+		DisplayBoard(board, ROW, COL);
+		ret=IsWin(board, ROW, COL);
+		if (ret != 'C')
+		{
+			break;
+		}
+	}
+	if (ret == '*')
+	{
+		printf("玩家赢\n");
+	}
+	else if (ret == '#')
+	{
+		printf("电脑赢\n");
+	}
+	else
+		printf("平局\n");
+}
+void test()
+{
+	int input = 0;
+	do
+	{
+		menu();
+		printf("请选择：》");
+		scanf("%d", &input);
+		switch (input)
+		{
+		case 1:
+			game();
+			break;
+		case 0:
+			printf("退出游戏\n");
+			break;
+		default:
+			printf("选择错误，请重新选择\n");
+			break;
+		}
+	} while(input);
+}
+int main()
+{
+	test();
+	return 0;
+}
